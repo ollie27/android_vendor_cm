@@ -10,7 +10,7 @@ unzip -o -d $BASEDIR/proprietary $BASEDIR/proprietary/Term.apk lib/*
 (cat << EOF) > $BASEDIR/proprietary/Android.mk
 LOCAL_PATH := \$(my-dir)
 
-ifneq (\$(filter arm mips x86,\$(TARGET_ARCH)),)
+ifneq (\$(filter arm64-v8a armeabi armeabi-v7a mips mips64 x86 x86_64,\$(TARGET_CPU_ABI)),)
 
 include \$(CLEAR_VARS)
 LOCAL_MODULE := AndroidTerm
@@ -22,35 +22,13 @@ LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
 LOCAL_CERTIFICATE := PRESIGNED
 include \$(BUILD_PREBUILT)
 
-ifeq (\$(TARGET_ARCH),arm)
 include \$(CLEAR_VARS)
 LOCAL_MODULE := libjackpal-androidterm4
 LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := lib/armeabi/\$(LOCAL_MODULE).so
+LOCAL_SRC_FILES := lib/\$(TARGET_CPU_ABI)/\$(LOCAL_MODULE).so
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 LOCAL_MODULE_SUFFIX := .so
 include \$(BUILD_PREBUILT)
-endif
-
-ifeq (\$(TARGET_ARCH),mips)
-include \$(CLEAR_VARS)
-LOCAL_MODULE := libjackpal-androidterm4
-LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := lib/mips/\$(LOCAL_MODULE).so
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_MODULE_SUFFIX := .so
-include \$(BUILD_PREBUILT)
-endif
-
-ifeq (\$(TARGET_ARCH),x86)
-include \$(CLEAR_VARS)
-LOCAL_MODULE := libjackpal-androidterm4
-LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := lib/x86/\$(LOCAL_MODULE).so
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_MODULE_SUFFIX := .so
-include \$(BUILD_PREBUILT)
-endif
 
 endif
 EOF
